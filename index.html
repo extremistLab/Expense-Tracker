@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+    <div class="card text-center">
+        <div class="card-header">
+          <h2>Expense Tracker</h2>
+        </div>
+        <form onsubmit="addExpense(event)" id="my-form">
+        <div class="card-body">
+            <div class="row">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Category</label>
+                    <select class="form-select" id="inputGroupSelect01">
+                      <option selected>Choose...</option>
+                      <option value="1">Movies</option>
+                      <option value="1">Petrol</option>
+                      <option value="1">Internet</option>
+                    </select>
+                  </div>
+                
+                <div class="col">
+                  <input type="text" class="form-control" id="nameExp" placeholder="Expense Name" aria-label="Name">
+                </div>
+              </div>
+              <br>
+              <div class="input-group mb-3" >
+                <span class="input-group-text">₹</span>
+                <input type="text" class="form-control" id="amtExp" placeholder="Amount" aria-label="Amount (to the nearest rupees)">
+                <span class="input-group-text">.00</span>
+              </div>
+              
+              <div class="input-group" >
+                <span class="input-group-text">Expense Description</span>
+                <textarea class="form-control" id="expDescription" aria-label="With textarea"></textarea>
+              </div>
+              <br>
+          <button type="submit" class="btn btn-primary">Add Expense</button>
+        </div>
+        </form>
+        
+        <p class="card-footer text-body-secondary">
+            <footer class="blockquote-footer">“Beware of little expenses”</footer>
+        </div>
+      </div>
+
+      <h3 style="display: contents;">Expense Entry List</h3>
+      <ul id="entry-list">
+          <!-- List entries will be dynamically added here -->
+      </ul>
+
+<script>
+        function addExpense(event){
+            const expCategory = document.getElementById('inputGroupSelect01').value;
+            const expName = document.getElementById('nameExp').value;
+            const expAmount = document.getElementById('amtExp').value;
+            const expDescription = document.getElementById('expDescription').value;
+
+
+            const obj = {
+              expCategory,
+              expName,
+              expAmount,
+              expDescription
+            }
+
+            localStorage.setItem('details',JSON.stringify(obj));
+
+        expListItems(obj);
+
+        function expListItems(obj) {
+
+            const entryForm = document.getElementById("entry-form");
+            const entryList = document.getElementById("entry-list");
+            const listItem = document.createElement("li");
+            listItem.textContent = obj.expCategory + ' - ' + obj.expName + ' - '
+                    +obj.expAmount + ' - ' + obj.expDescription
+
+
+          const deleteBtn = document.createElement('input')
+          deleteBtn.type = 'button'
+          deleteBtn.value = 'Delete'
+          deleteBtn.onclick = () => {
+            localStorage.removeItem(obj.expName)
+            entryList.removeChild(listItem)
+          }
+          const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "DELETE EXPENSE";
+                    deleteButton.addEventListener("click", function() {
+                        listItem.remove();
+                        localStorage.removeItem(obj)
+                    });
+
+
+          const editButton = document.createElement("button");
+                  editButton.textContent = "EDIT EXPENSE";
+                  editButton.addEventListener( "click", function(){
+                    localStorage.removeItem(obj)
+                    listItem.remove();
+                    document.getElementById('inputGroupSelect01').value = obj.expCategory;
+                    document.getElementById('nameExp').value = obj.expName;
+                    document.getElementById('amtExp').value = obj.expAmount;
+                    document.getElementById('expDescription').value = obj.expDescription;
+
+
+                  });   
+          listItem.appendChild(editButton);           
+          listItem.appendChild(deleteButton);
+          entryList.appendChild(listItem);
+
+        }
+      }
+
+</script>
+
+</body>
+</html>
